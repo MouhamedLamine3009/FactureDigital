@@ -1,0 +1,204 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+[x-cloak] {
+    display: none;
+}   
+
+@layer components {
+    /* Glassmorphism Card */
+    .glass-card {
+        @apply bg-white/70 dark:bg-gray-800/70 backdrop-blur-md border border-white/20 dark:border-gray-700/20 shadow-glass;
+    }
+    
+    /* Gradient Background Cards */
+    .gradient-card {
+        @apply bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 border border-gray-100 dark:border-gray-700 shadow-card;
+    }
+    
+    /* Primary Gradient Card */
+    .gradient-primary {
+        @apply bg-gradient-to-r from-primary-500 to-primary-600 text-white;
+    }
+    
+    /* Accent Gradient Card */
+    .gradient-accent {
+        @apply bg-gradient-to-r from-accent-500 to-accent-600 text-white;
+    }
+    
+    /* Success Gradient Card */
+    .gradient-success {
+        @apply bg-gradient-to-r from-success-500 to-success-600 text-white;
+    }
+    
+    /* Warning Gradient Card */
+    .gradient-warning {
+        @apply bg-gradient-to-r from-warning-500 to-warning-600 text-white;
+    }
+    
+    /* Danger Gradient Card */
+    .gradient-danger {
+        @apply bg-gradient-to-r from-danger-500 to-danger-600 text-white;
+    }
+    
+    /* Modern Button */
+    .btn-primary {
+        @apply inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:from-primary-600 hover:to-primary-700 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200;
+    }
+    
+    .btn-secondary {
+        @apply inline-flex items-center justify-center px-4 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 font-medium rounded-lg border border-gray-200 dark:border-gray-600 shadow-sm hover:bg-gray-50 dark:hover:bg-gray-600 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-600 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200;
+    }
+    
+    .btn-accent {
+        @apply inline-flex items-center justify-center px-4 py-2 bg-gradient-to-r from-accent-500 to-accent-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg hover:from-accent-600 hover:to-accent-700 focus:outline-none focus:ring-2 focus:ring-accent-500 focus:ring-offset-2 dark:focus:ring-offset-gray-900 transition-all duration-200;
+    }
+    
+    /* Modern Input */
+    .input-modern {
+        @apply block w-full rounded-lg border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2.5 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all duration-200;
+    }
+    
+    /* Status Badges - Light Mode */
+    .badge {
+        @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+    }
+    
+    .badge-success {
+        @apply badge bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300;
+    }
+    
+    .badge-warning {
+        @apply badge bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300;
+    }
+    
+    .badge-danger {
+        @apply badge bg-red-100 dark:bg-red-900/50 text-red-800 dark:text-red-300;
+    }
+    
+    .badge-info {
+        @apply badge bg-blue-100 dark:bg-blue-900/50 text-blue-800 dark:text-blue-300;
+    }
+    
+    .badge-neutral {
+        @apply badge bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-300;
+    }
+    
+    /* Modern Table */
+    .table-modern {
+        @apply min-w-full divide-y divide-gray-100 dark:divide-gray-700;
+    }
+    
+    .table-modern thead {
+        @apply bg-gray-50 dark:bg-gray-800;
+    }
+    
+    .table-modern th {
+        @apply px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider;
+    }
+    
+    .table-modern td {
+        @apply px-4 py-3 text-sm text-gray-700 dark:text-gray-300;
+    }
+    
+    .table-modern tbody {
+        @apply bg-white dark:bg-gray-800 divide-y divide-gray-100 dark:divide-gray-700;
+    }
+    
+    .table-modern tbody tr {
+        @apply hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150;
+    }
+    
+    /* Stat Card */
+    .stat-card {
+        @apply relative overflow-hidden rounded-2xl p-6 shadow-card transition-all duration-300 hover:shadow-card-hover hover:-translate-y-1;
+    }
+    
+    /* Section Title */
+    .section-title {
+        @apply text-xl font-bold text-gray-900 dark:text-white mb-4;
+    }
+    
+    /* Page Title */
+    .page-title {
+        @apply text-3xl font-bold text-gray-900 dark:text-white tracking-tight;
+    }
+}
+
+@layer utilities {
+    /* Text gradient */
+    .text-gradient {
+        @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-500 to-accent-500;
+    }
+    
+    /* Scrollbar hide */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+    
+    /* Animation delays */
+    .animation-delay-100 {
+        animation-delay: 100ms;
+    }
+    .animation-delay-200 {
+        animation-delay: 200ms;
+    }
+    .animation-delay-300 {
+        animation-delay: 300ms;
+    }
+    .animation-delay-400 {
+        animation-delay: 400ms;
+    }
+    .animation-delay-500 {
+        animation-delay: 500ms;
+    }
+}
+
+/* Custom scrollbar for webkit */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-track {
+    background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 3px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+    background: #4b5563;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+    background: #6b7280;
+}
+
+/* Livewire transitions */
+.lw-enter {
+    @apply animate-fade-in;
+}
+
+.lw-leave {
+    @apply animate-fade-in;
+}
