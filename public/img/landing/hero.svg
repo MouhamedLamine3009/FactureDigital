@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 460" width="600" height="460" fill="none">
+  <defs>
+    <linearGradient id="hp" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="ha" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dd3fc"/>
+      <stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="hg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Fond décoratif -->
+  <circle cx="540" cy="60" r="90" fill="url(#hp)" opacity="0.12"/>
+  <circle cx="30" cy="410" r="110" fill="url(#ha)" opacity="0.10"/>
+  <circle cx="300" cy="230" r="220" fill="url(#hg)" opacity="0.05"/>
+
+  <!-- Grand document principal (facture) -->
+  <g transform="rotate(-4 300 230)">
+    <rect x="150" y="70" width="300" height="330" rx="22" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+    <rect x="140" y="60" width="90" height="90" rx="18" fill="url(#hp)"/>
+    <path d="M155 105 l18 18 l16 -16 M178 105 l18 18 l16 -16" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="255" y="62" width="180" height="16" rx="8" fill="#0ea5e9" opacity="0.85"/>
+    <rect x="255" y="86" width="120" height="12" rx="6" fill="#38bdf8" opacity="0.4"/>
+
+    <rect x="185" y="170" width="230" height="12" rx="6" fill="#e2e8f0"/>
+    <rect x="185" y="194" width="180" height="12" rx="6" fill="#e2e8f0"/>
+    <rect x="185" y="218" width="210" height="12" rx="6" fill="#e2e8f0"/>
+    <rect x="185" y="242" width="150" height="12" rx="6" fill="#e2e8f0"/>
+
+    <!-- Séparateur -->
+    <rect x="185" y="272" width="230" height="2" rx="1" fill="#e2e8f0"/>
+
+    <!-- Total -->
+    <rect x="330" y="290" width="85" height="34" rx="10" fill="url(#hg)"/>
+    <text x="372" y="313" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="700" fill="#ffffff">PAYÉ</text>
+
+    <text x="185" y="315" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="600" fill="#0ea5e9">Total (XOF)</text>
+    <text x="420" y="355" text-anchor="end" font-family="Inter, Arial, sans-serif" font-size="20" font-weight="800" fill="#0f172a">25 400</text>
+  </g>
+
+  <!-- Carte de paiement flottante -->
+  <g transform="translate(60,150) rotate(-8)">
+    <rect x="0" y="0" width="150" height="90" rx="14" fill="url(#ha)"/>
+    <rect x="14" y="14" width="34" height="24" rx="6" fill="#ffffff" opacity="0.35"/>
+    <rect x="14" y="50" width="70" height="8" rx="4" fill="#ffffff" opacity="0.6"/>
+    <rect x="14" y="64" width="45" height="8" rx="4" fill="#ffffff" opacity="0.4"/>
+    <circle cx="120" cy="30" r="12" fill="#ffffff" opacity="0.25"/>
+  </g>
+
+  <!-- Document secondaire - devis -->
+  <g transform="translate(430,290) rotate(7)">
+    <rect x="0" y="0" width="120" height="150" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+    <rect x="12" y="12" width="40" height="40" rx="10" fill="url(#hp)" opacity="0.9"/>
+    <path d="M26 32 l6 6 l8 -8 M26 44 l6 6 l8 -8" stroke="#ffffff" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <rect x="62" y="16" width="46" height="10" rx="5" fill="#0ea5e9" opacity="0.5"/>
+    <rect x="62" y="32" width="36" height="9" rx="4.5" fill="#38bdf8" opacity="0.3"/>
+    <rect x="12" y="66" width="96" height="9" rx="4.5" fill="#e2e8f0"/>
+    <rect x="12" y="82" width="70" height="9" rx="4.5" fill="#e2e8f0"/>
+    <rect x="12" y="98" width="84" height="9" rx="4.5" fill="#e2e8f0"/>
+    <rect x="12" y="124" width="50" height="16" rx="8" fill="#7dd3fc"/>
+    <text x="37" y="136" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="10" font-weight="700" fill="#0369a1">DEVIS</text>
+  </g>
+
+  <!-- Pièces dorées -->
+  <circle cx="120" cy="400" r="16" fill="#fbbf24" stroke="#f59e0b" stroke-width="3"/>
+  <text x="120" y="405" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="12" font-weight="800" fill="#b45309">CFA</text>
+  <circle cx="505" cy="380" r="12" fill="#fde68a" stroke="#f59e0b" stroke-width="3"/>
+  <circle cx="488" cy="392" r="8" fill="#fbbf24" stroke="#f59e0b" stroke-width="2.5"/>
+
+  <!-- Flèche de réussite -->
+  <g transform="translate(300,30)">
+    <circle cx="0" cy="0" r="26" fill="url(#hg)"/>
+    <path d="M -11 0 l 7 7 l 15 -15" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

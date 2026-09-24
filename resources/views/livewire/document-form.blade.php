@@ -165,18 +165,18 @@
                                                 class="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase">
                                                 Description</th>
                                             <th
-                                                class="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-20">
+                                                class="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-28">
                                                 Qté</th>
                                             <th
-                                                class="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-24">
-                                                Prix</th>
+                                                class="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-36">
+                                                Prix Unitaire</th>
                                             <th
-                                                class="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-20">
+                                                class="px-3 py-3 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-20">
                                                 TVA</th>
                                             <th
-                                                class="px-3 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-24">
+                                                class="px-3 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase w-32">
                                                 Total</th>
-                                            <th class="px-3 py-3 w-10"></th>
+                                            <th class="px-3 py-3 w-12"></th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -190,12 +190,14 @@
                                                 <td class="px-3 py-3">
                                                     <input type="number" wire:model.lazy="items.{{ $index }}.quantity"
                                                         wire:input="calculateTotals" step="0.01" min="0.01"
-                                                        class="input-modern text-sm">
+                                                        class="input-modern text-sm text-center font-semibold w-full"
+                                                        style="min-width:70px;">
                                                 </td>
                                                 <td class="px-3 py-3">
                                                     <input type="number" wire:model.lazy="items.{{ $index }}.unit_price"
                                                         wire:input="calculateTotals" step="0.01" min="0"
-                                                        class="input-modern text-sm">
+                                                        class="input-modern text-sm text-center font-semibold w-full"
+                                                        style="min-width:90px;">
                                                 </td>
                                                 <td class="px-3 py-3">
                                                     <select wire:model="items.{{ $index }}.tax_rate"

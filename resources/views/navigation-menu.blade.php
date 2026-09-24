@@ -79,13 +79,13 @@
                 </button>
 
                 <!-- Teams Dropdown -->
-                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
+                @if (Laravel\Jetstream\Jetstream::hasTeamFeatures() && Auth::check())
                     <div class="ms-3 relative">
                         <x-dropdown align="right" width="60">
                             <x-slot name="trigger">
                                 <span class="inline-flex rounded-xl">
                                     <button type="button"
-                                        class="team-dropdown-btn inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-xl text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:bg-gray-100 focus:text-gray-800 transition ease-in-out duration-150">
+                                        class="team-dropdown-btn inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-xl text-gray-600 bg-gray-50 dark:text-gray-300 dark:bg-gray-800 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:bg-gray-100 focus:text-gray-800 dark:focus:bg-gray-700 dark:focus:text-white transition ease-in-out duration-150">
                                         {{ Auth::user()->currentTeam->name }}
 
                                         <svg class="ms-2 -me-0.5 size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
@@ -147,7 +147,7 @@
                             @else
                                 <span class="inline-flex rounded-xl">
                                     <button type="button"
-                                        class="user-dropdown-btn inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-xl text-gray-600 bg-gray-50 hover:bg-gray-100 hover:text-gray-800 focus:outline-none focus:bg-gray-100 focus:text-gray-800 transition ease-in-out duration-150">
+                                        class="user-dropdown-btn inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-xl text-gray-600 bg-gray-50 dark:text-gray-300 dark:bg-gray-800 hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-700 dark:hover:text-white focus:outline-none focus:bg-gray-100 focus:text-gray-800 dark:focus:bg-gray-700 dark:focus:text-white transition ease-in-out duration-150">
                                         {{ Auth::user()->name }}
 
                                         <svg class="ms-2 -me-0.5 size-4 text-gray-400" xmlns="http://www.w3.org/2000/svg"
@@ -195,7 +195,7 @@
             <!-- Hamburger -->
             <div class="-me-2 flex items-center sm:hidden">
                 <button @click="open = ! open"
-                    class="hamburger-btn inline-flex items-center justify-center p-2 rounded-xl text-gray-500 hover:text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-700 transition duration-150 ease-in-out">
+                    class="hamburger-btn inline-flex items-center justify-center p-2 rounded-xl text-gray-500 dark:text-gray-300 hover:text-gray-700 hover:bg-gray-100 dark:hover:text-white dark:hover:bg-gray-700 focus:outline-none focus:bg-gray-100 focus:text-gray-700 dark:focus:bg-gray-700 dark:focus:text-white transition duration-150 ease-in-out">
                     <svg class="size-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex"
                             stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

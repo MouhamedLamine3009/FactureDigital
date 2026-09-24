@@ -2,7 +2,9 @@
 
 namespace App\Livewire;
 
+use App\Models\Client;
 use App\Models\Document;
+use Carbon\Carbon;
 use DB;
 use Livewire\Component;
 use Livewire\Attributes\Layout;
@@ -12,6 +14,7 @@ class Dashboard extends Component
 {
 
     public $period = 'month';
+    public $activeRangeLabel = null;
     public $stats = [];
     public $recentDocuments;
     public $company;
@@ -41,17 +44,45 @@ class Dashboard extends Component
         $this->loadStats();
     }
 
-    public function updated($propertyName)
-    {
-        if ($propertyName === 'period') {
-            $this->loadStats();
-        }
-    }
-
     public function setPeriod($period)
     {
         $this->period = $period;
-        $this->loadStats();
+    }
+
+    /**
+     * Résout la période active (début, fin, granularité) selon le présélection.
+     */
+    private function resolvePeriod(): array
+    {
+        $now = now();
+
+        return match ($this->period) {
+            'week' => [
+                'start' => $now->copy()->subWeek()->startOfDay(),
+                'end' => $now->copy()->endOfDay(),
+                'granularity' => 'day',
+            ],
+            'threemonths' => [
+                'start' => $now->copy()->subMonths(3)->startOfDay(),
+                'end' => $now->copy()->endOfDay(),
+                'granularity' => 'week',
+            ],
+            'sixmonths' => [
+                'start' => $now->copy()->subMonths(6)->startOfDay(),
+                'end' => $now->copy()->endOfDay(),
+                'granularity' => 'month',
+            ],
+            'year' => [
+                'start' => $now->copy()->subYear()->startOfDay(),
+                'end' => $now->copy()->endOfDay(),
+                'granularity' => 'month',
+            ],
+            default => [
+                'start' => $now->copy()->subMonth()->startOfDay(),
+                'end' => $now->copy()->endOfDay(),
+                'granularity' => 'day',
+            ],
+        };
     }
 
     public function loadStats()
@@ -66,122 +97,197 @@ class Dashboard extends Component
                 'invoices_count' => 0,
                 'payment_rate' => 0,
                 'accepted_quotes' => 0,
+                'refused_quotes' => 0,
+                'clients_donut' => ['actifs' => 0, 'inactifs' => 0],
+                'invoices_donut' => ['payees' => 0, 'en_attente' => 0, 'en_retard' => 0],
                 'chart' => collect([]),
+                'chart_subtitle' => 'Revenus mensuels',
             ];
+            $this->activeRangeLabel = null;
             return;
         }
 
         $companyId = $this->company->id;
         $today = now()->format('Y-m-d');
 
-        $dateRange = match ($this->period) {
-            'week' => now()->subWeek(),
-            'month' => now()->subMonth(),
-            'year' => now()->subYear(),
-            default => now()->subMonth(),
-        };
+        $period = $this->resolvePeriod();
+        $start = $period['start'];
+        $end = $period['end'];
+        $granularity = $period['granularity'];
 
-        // Chiffres d'affaires - Sum of paid invoices total (using paid_at date)
+        $dateRange = [$start->toDateString(), $end->toDateString()];
+        $tsRange = [$start->copy()->toDateTimeString(), $end->copy()->toDateTimeString()];
+
+        // Revenus : factures payées sur la période (encaissées, date = paid_at)
         $this->stats['revenue'] = Document::where('company_id', $companyId)
             ->where('type', 'invoice')
             ->where('status', 'paid')
-            ->where('paid_at', '>=', $dateRange)
+            ->whereBetween('paid_at', $tsRange)
             ->sum('total');
 
-        // Factures en retard - Invoices with due_date in the past (automatic detection based on due_date)
-        // Automatically count as overdue if due_date is in the past and not paid/cancelled/draft
+        // En retard : factures émises sur la période, désormais échues
         $this->stats['overdue'] = Document::where('company_id', $companyId)
             ->where('type', 'invoice')
+            ->whereBetween('issue_date', $dateRange)
             ->whereNotIn('status', ['paid', 'cancelled', 'draft'])
             ->where('due_date', '<', $today)
             ->count();
 
-        // En attente de paiement - Invoices sent but not overdue yet
-        // Includes sent, partial_paid, accepted quotes that haven't been converted
-        // Note: invoices with 'overdue' status are counted in overdue, not here
+        // En attente : factures émises sur la période, encore dans les délais
         $this->stats['pending'] = Document::where('company_id', $companyId)
             ->where('type', 'invoice')
+            ->whereBetween('issue_date', $dateRange)
             ->whereIn('status', ['sent', 'partial_paid'])
             ->where('due_date', '>=', $today)
             ->count();
 
-        // Devis en attente - Quotes that are draft, sent or viewed (not accepted/refused/converted)
-        $this->stats['quotes'] = Document::where('company_id', $companyId)
+        // Devis (émis sur la période) — 1 requête agrégée par statut
+        $quoteRow = Document::where('company_id', $companyId)
             ->where('type', 'quote')
-            ->whereIn('status', ['draft', 'sent', 'viewed'])
-            ->count();
+            ->whereBetween('issue_date', $dateRange)
+            ->selectRaw("
+                COUNT(CASE WHEN status IN ('draft','sent','viewed') THEN 1 END) as en_cours,
+                COUNT(CASE WHEN status = 'accepted' THEN 1 END) as acceptes,
+                COUNT(CASE WHEN status = 'refused' THEN 1 END) as refuses
+            ")
+            ->first();
 
-        // Nombre de clients
-        $this->stats['clients_count'] = \App\Models\Client::where('company_id', $companyId)->count();
+        $this->stats['quotes'] = (int) $quoteRow->en_cours;
+        $this->stats['accepted_quotes'] = (int) $quoteRow->acceptes;
+        $this->stats['refused_quotes'] = (int) $quoteRow->refuses;
 
-        // Nombre de factures créées cette période
+        // Clients créés sur la période — 1 requête agrégée (total + actifs)
+        $clientRow = Client::where('company_id', $companyId)
+            ->whereBetween('created_at', $tsRange)
+            ->selectRaw('COUNT(*) as total, COALESCE(SUM(is_active), 0) as actifs')
+            ->first();
+
+        $this->stats['clients_count'] = (int) $clientRow->total;
+        $this->stats['clients_donut'] = [
+            'actifs' => (int) $clientRow->actifs,
+            'inactifs' => (int) $clientRow->total - (int) $clientRow->actifs,
+        ];
+
+        // Factures créées sur la période
         $this->stats['invoices_count'] = Document::where('company_id', $companyId)
             ->where('type', 'invoice')
-            ->where('created_at', '>=', $dateRange)
+            ->whereBetween('created_at', $tsRange)
             ->count();
 
-        // Taux de paiement - Percentage of paid invoices
-        $totalInvoices = Document::where('company_id', $companyId)
+        // Taux de paiement + donut factures — 1 requête agrégée
+        $invoiceRow = Document::where('company_id', $companyId)
             ->where('type', 'invoice')
+            ->whereBetween('issue_date', $dateRange)
             ->whereNotIn('status', ['draft', 'cancelled'])
-            ->count();
+            ->selectRaw('COUNT(*) as total, COALESCE(SUM(status = \'paid\'), 0) as paid')
+            ->first();
 
-        $paidInvoices = Document::where('company_id', $companyId)
-            ->where('type', 'invoice')
-            ->where('status', 'paid')
-            ->count();
+        $totalInvoices = (int) $invoiceRow->total;
+        $paidInvoices = (int) $invoiceRow->paid;
 
         $this->stats['payment_rate'] = $totalInvoices > 0
             ? round(($paidInvoices / $totalInvoices) * 100, 1)
             : 0;
 
-        // Devis acceptés - Accepted quotes count
-        $this->stats['accepted_quotes'] = Document::where('company_id', $companyId)
-            ->where('type', 'quote')
-            ->where('status', 'accepted')
-            ->count();
+        // Répartition des factures par statut (payées / en attente / en retard)
+        $this->stats['invoices_donut'] = [
+            'payees' => $paidInvoices,
+            'en_attente' => $this->stats['pending'],
+            'en_retard' => $this->stats['overdue'],
+        ];
 
-        // Graphique d'évolution - Get monthly revenue for last 6 months (using paid_at date)
-        $dateFormat = DB::connection()->getDriverName() === 'sqlite'
-            ? "strftime('%Y-%m', paid_at)"
-            : "DATE_FORMAT(paid_at, '%Y-%m')";
+        // Graphique d'évolution du chiffre d'affaires (granularité adaptative)
+        $this->stats['chart'] = collect($this->buildRevenueSeries($start, $end, $granularity));
 
-        // Get monthly revenue for last 6 months
-        $monthlyRevenue = Document::where('company_id', $companyId)
+        $this->activeRangeLabel = 'du ' . $start->format('d/m/Y') . ' au ' . $end->format('d/m/Y');
+        $this->stats['chart_subtitle'] = 'Revenus ' . $this->granularityLabel($granularity)
+            . ' du ' . $start->format('d/m/Y') . ' au ' . $end->format('d/m/Y');
+    }
+
+    /**
+     * Série mensuelle/jour/hebdo du chiffre d'affaires sur la période.
+     */
+    private function buildRevenueSeries(Carbon $start, Carbon $end, string $granularity): array
+    {
+        $rows = Document::where('company_id', $this->company->id)
             ->where('type', 'invoice')
             ->where('status', 'paid')
-            ->where('paid_at', '>=', now()->subMonths(6)->startOfMonth())
-            ->select(
-                DB::raw($dateFormat . ' as month'),
-                DB::raw('SUM(total) as total')
-            )
-            ->groupBy('month')
-            ->orderBy('month')
-            ->get();
+            ->whereBetween('paid_at', [$start->copy()->toDateTimeString(), $end->copy()->toDateTimeString()])
+            ->select(DB::raw('date(paid_at) as d'), DB::raw('SUM(total) as total'))
+            ->groupBy(DB::raw('date(paid_at)'))
+            ->orderBy('d')
+            ->pluck('total', 'd');
 
-        // Convert to array with evolution percentage
-        $monthlyData = [];
-        $previousTotal = null;
+        return $this->bucketize($start, $end, $granularity, $rows);
+    }
 
-        foreach ($monthlyRevenue as $item) {
-            $monthName = \Carbon\Carbon::createFromFormat('Y-m', $item->month)->format('F Y');
-            $evolution = null;
+    /**
+     * Découpe la période en cases (jour / semaine / mois) remplies à 0.
+     */
+    private function bucketize(Carbon $start, Carbon $end, string $granularity, $rows): array
+    {
+        $series = [];
 
-            if ($previousTotal !== null && $previousTotal > 0) {
-                $evolution = round((($item->total - $previousTotal) / $previousTotal) * 100, 1);
+        if ($granularity === 'day') {
+            for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+                $key = $d->format('Y-m-d');
+                $series[] = [
+                    'key' => $key,
+                    'label' => $this->frDayLabel($d),
+                    'value' => (float) ($rows[$key] ?? 0),
+                ];
             }
 
-            $monthlyData[] = [
-                'month' => $monthName,
-                'month_key' => $item->month,
-                'total' => $item->total,
-                'evolution' => $evolution
-            ];
-
-            $previousTotal = $item->total;
+            return $series;
         }
 
-        $this->stats['chart'] = collect($monthlyData);
+        $buckets = [];
+
+        for ($d = $start->copy(); $d->lte($end); $d->addDay()) {
+            if ($granularity === 'week') {
+                $weekStart = $d->copy()->startOfWeek();
+                $k = $weekStart->format('Y-m-d');
+                $label = 'Sem. ' . $this->frDayLabel($weekStart);
+            } else {
+                $k = $d->format('Y-m');
+                $label = $this->frMonthLabel($k);
+            }
+
+            $buckets[$k] ??= ['label' => $label, 'value' => 0];
+            $buckets[$k]['value'] += (float) ($rows[$d->format('Y-m-d')] ?? 0);
+        }
+
+        foreach ($buckets as $k => $bucket) {
+            $series[] = ['key' => $k, 'label' => $bucket['label'], 'value' => $bucket['value']];
+        }
+
+        return $series;
+    }
+
+    private function granularityLabel(string $granularity): string
+    {
+        return match ($granularity) {
+            'day' => 'quotidiens',
+            'week' => 'hebdomadaires',
+            default => 'mensuels',
+        };
+    }
+
+    private function frShortMonth(int $month): string
+    {
+        return ['janv.', 'févr.', 'mars', 'avr.', 'mai', 'juin', 'juil.', 'août', 'sept.', 'oct.', 'nov.', 'déc.'][$month - 1];
+    }
+
+    private function frDayLabel(Carbon $date): string
+    {
+        return $date->day . ' ' . $this->frShortMonth($date->month);
+    }
+
+    private function frMonthLabel(string $yearMonth): string
+    {
+        [$year, $month] = array_map('intval', explode('-', $yearMonth));
+
+        return ucfirst($this->frShortMonth($month)) . ' ' . $year;
     }
 
     public function loadRecentDocuments()
@@ -205,4 +311,3 @@ class Dashboard extends Component
         return view('livewire.dashboard');
     }
 }
-

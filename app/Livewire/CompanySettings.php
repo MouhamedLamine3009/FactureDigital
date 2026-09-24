@@ -67,8 +67,11 @@ class CompanySettings extends Component
         'bank_iban' => 'nullable|string|max:50',
         'bank_bic' => 'nullable|string|max:20',
         'bank_name' => 'nullable|string|max:100',
-        'bank_account_name' => 'nullable|string|max:255',
+'bank_account_name' => 'nullable|string|max:255',
         'bank_account_number' => 'nullable|string|max:50',
+        'rccm' => 'nullable|string|max:255',
+        'terms_conditions' => 'nullable|string|max:10000',
+        'footer_notes' => 'nullable|string|max:10000',
         'vat_applicable' => 'boolean',
         'invoice_prefix' => 'nullable|string|max:10',
         'quote_prefix' => 'nullable|string|max:10',
@@ -136,8 +139,7 @@ class CompanySettings extends Component
 
     public function save()
     {
-        // Simply show confirmation modal without validation
-        $this->showConfirmModal = true;
+        $this->persistCompany();
     }
 
     public function test()
@@ -147,7 +149,14 @@ class CompanySettings extends Component
 
     public function confirmSave()
     {
+        $this->persistCompany();
+    }
+
+    private function persistCompany(): void
+    {
         // Validate only when actually saving
+        $this->normalizeFields();
+
         $this->validate();
 
         $data = [
@@ -203,9 +212,42 @@ class CompanySettings extends Component
         $this->dispatch('show-success', message: 'Paramètres enregistrés avec succès !');
     }
 
+    private function normalizeFields(): void
+    {
+        foreach ([
+            'legal_name',
+            'ninea',
+            'vat_number',
+            'rccm',
+            'address',
+            'postal_code',
+            'city',
+            'country',
+            'phone',
+            'email',
+            'website',
+            'bank_iban',
+            'bank_bic',
+            'bank_name',
+            'bank_account_name',
+            'bank_account_number',
+            'invoice_prefix',
+            'quote_prefix',
+            'terms_conditions',
+            'footer_notes',
+            'currency',
+            'currency_symbol',
+        ] as $field) {
+            $this->{$field} = blank($this->{$field}) ? null : trim($this->{$field});
+        }
+
+        if ($this->website && ! preg_match('#^https?://#i', $this->website)) {
+            $this->website = 'https://' . $this->website;
+        }
+    }
+
     public function render()
     {
         return view('livewire.company-settings');
     }
 }
-

@@ -1,3 +1,5 @@
+
+
 <div class="animate-fade-in">
     <!-- Header Section -->
     <div class="py-8">
@@ -82,8 +84,7 @@
 
                             <div>
                                 <label for="email"
-                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email
-                                    *</label>
+                                    class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
                                 <input type="email" wire:model="email" id="email" class="input-modern"
                                     placeholder="email@exemple.com">
                                 @error('email') <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}
@@ -267,7 +268,7 @@
                         </svg>
                         Annuler
                     </a>
-                    <button type="submit" class="btn-primary order-1 sm:order-2">
+<button type="button" wire:click="save" class="btn-primary order-1 sm:order-2" wire:loading.attr="disabled" wire:target="save" title="Créer le client" id="saveClientBtn">
                         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             @if($client)
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />

@@ -47,4 +47,39 @@ return [
         'redirect' => rtrim(env('APP_URL', 'http://localhost'), '/') . '/auth/callback/microsoft',
     ],
 
+    'twilio_whatsapp' => [
+        'account_sid' => env('TWILIO_ACCOUNT_SID'),
+        'auth_token' => env('TWILIO_AUTH_TOKEN'),
+        'from' => env('TWILIO_WHATSAPP_FROM'),
+        'base_url' => env('TWILIO_BASE_URL', 'https://api.twilio.com'),
+        'api_version' => env('TWILIO_API_VERSION', '2010-04-01'),
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Meta WhatsApp Cloud API
+    |--------------------------------------------------------------------------
+    |
+    | Configuration pour l'envoi de messages via l'API officielle
+    | Meta WhatsApp Cloud API (Methode 2 - Automatique).
+    |
+    | Documentation: https://developers.facebook.com/docs/whatsapp/cloud-api
+    |
+    | Variables .env requises:
+    |   META_WHATSAPP_ACCESS_TOKEN=VotreTokenAcces
+    |   META_WHATSAPP_PHONE_NUMBER_ID=VotrePhoneNumberID
+    |
+    | Optionnelles:
+    |   META_WHATSAPP_BASE_URL=https://graph.facebook.com
+    |   META_WHATSAPP_API_VERSION=v22.0
+    |
+    */
+    'meta_whatsapp' => [
+        'access_token'     => env('META_WHATSAPP_ACCESS_TOKEN'),
+        'phone_number_id'  => env('META_WHATSAPP_PHONE_NUMBER_ID'),
+        'base_url'         => env('META_WHATSAPP_BASE_URL', 'https://graph.facebook.com'),
+        'api_version'      => env('META_WHATSAPP_API_VERSION', 'v22.0'),
+    ],
+
 ];
+

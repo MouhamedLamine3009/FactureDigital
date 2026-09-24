@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 380" width="600" height="380" fill="none">
+  <defs>
+    <linearGradient id="d1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="d2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#a855f7"/>
+      <stop offset="1" stop-color="#7e22ce"/>
+    </linearGradient>
+    <linearGradient id="d3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <circle cx="40" cy="40" r="80" fill="url(#d1)" opacity="0.08"/>
+  <circle cx="560" cy="340" r="90" fill="url(#d2)" opacity="0.08"/>
+
+  <!-- Conteneur principal -->
+  <rect x="30" y="25" width="540" height="330" rx="20" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
+
+  <!-- En-tête -->
+  <rect x="55" y="45" width="60" height="14" rx="7" fill="#e2e8f0"/>
+  <rect x="125" y="45" width="40" height="14" rx="7" fill="#e2e8f0"/>
+  <rect x="175" y="45" width="40" height="14" rx="7" fill="#e2e8f0"/>
+  <circle cx="540" cy="52" r="10" fill="#e2e8f0"/>
+
+  <!-- Lignes verticales séparatrices (sidebar simulée) -->
+  <rect x="55" y="80" width="470" height="2" rx="1" fill="#eef2f7"/>
+  <rect x="55" y="80" width="90" height="8" rx="4" fill="#0ea5e9" opacity="0.4"/>
+  <rect x="55" y="100" width="70" height="8" rx="4" fill="#e2e8f0"/>
+  <rect x="55" y="118" width="80" height="8" rx="4" fill="#e2e8f0"/>
+
+  <!-- Cartes stats -->
+  <g>
+    <rect x="170" y="80" width="105" height="70" rx="12" fill="#f0f9ff"/>
+    <rect x="180" y="95" width="26" height="26" rx="8" fill="url(#d1)"/>
+    <rect x="180" y="128" width="60" height="9" rx="4.5" fill="#0284c7"/>
+    <rect x="180" y="140" width="40" height="8" rx="4" fill="#7dd3fc" opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="288" y="80" width="105" height="70" rx="12" fill="#faf5ff"/>
+    <rect x="298" y="95" width="26" height="26" rx="8" fill="url(#d2)"/>
+    <rect x="298" y="128" width="60" height="9" rx="4.5" fill="#7e22ce"/>
+    <rect x="298" y="140" width="40" height="8" rx="4" fill="#d8b4fe" opacity="0.5"/>
+  </g>
+  <g>
+    <rect x="406" y="80" width="105" height="70" rx="12" fill="#ecfdf5"/>
+    <rect x="416" y="95" width="26" height="26" rx="8" fill="url(#d3)"/>
+    <rect x="416" y="128" width="60" height="9" rx="4.5" fill="#059669"/>
+    <rect x="416" y="140" width="40" height="8" rx="4" fill="#6ee7b7" opacity="0.5"/>
+  </g>
+
+  <!-- Graphique en barres -->
+  <rect x="170" y="180" width="60" height="70" rx="8" fill="#e0f2fe"/>
+  <rect x="240" y="160" width="60" height="90" rx="8" fill="url(#d1)"/>
+  <rect x="310" y="195" width="60" height="55" rx="8" fill="#bae6fd"/>
+  <rect x="380" y="145" width="60" height="105" rx="8" fill="url(#d1)"/>
+  <rect x="450" y="170" width="60" height="80" rx="8" fill="#7dd3fc"/>
+
+  <!-- Bas du dashboard - liste de documents -->
+  <rect x="55" y="280" width="110" height="9" rx="4.5" fill="#0ea5e9" opacity="0.5"/>
+  <rect x="170" y="278" width="60" height="14" rx="7" fill="#e2e8f0"/>
+  <rect x="240" y="278" width="60" height="14" rx="7" fill="#e2e8f0"/>
+  <rect x="390" y="278" width="90" height="14" rx="7" fill="#d8b4fe"/>
+  <rect x="170" y="305" width="320" height="10" rx="5" fill="#f1f5f9"/>
+  <rect x="170" y="322" width="280" height="10" rx="5" fill="#f1f5f9"/>
+
+  <!-- Badge flottant -->
+  <g transform="translate(55,140)">
+    <rect x="0" y="0" width="120" height="60" rx="12" fill="url(#d3)"/>
+    <circle cx="18" cy="30" r="9" fill="#ffffff" opacity="0.3"/>
+    <path d="M13 30 l4 4 l8 -9" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="36" y="26" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="700" fill="#ffffff">+32%</text>
+    <text x="36" y="42" font-family="Inter, Arial, sans-serif" font-size="8" fill="#ffffff" opacity="0.85">Ce mois-ci</text>
+  </g>
+</svg>

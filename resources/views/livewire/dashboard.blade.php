@@ -1,4 +1,4 @@
-<div class="animate-fade-in" wire:poll.30s="loadStats">
+<div class="animate-fade-in" wire:poll.visible.60s="loadStats">
     <!-- Header Section -->
     <div class="py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -11,41 +11,75 @@
                 </div>
             </div>
 
-            <!-- Period Filter -->
-            <div class="flex items-center gap-4 mb-6">
-                <span class="text-sm text-gray-500 dark:text-gray-400">Periode:</span>
-                <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-                    <button wire:click="setPeriod('week')"
-                        class="px-4 py-1.5 rounded-md text-sm font-medium transition-all {{ $period === 'week' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200' }}">
-                        Semaine
-                    </button>
-                    <button wire:click="setPeriod('month')"
-                        class="px-4 py-1.5 rounded-md text-sm font-medium transition-all {{ $period === 'month' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200' }}">
-                        Mois
-                    </button>
-                    <button wire:click="setPeriod('year')"
-                        class="px-4 py-1.5 rounded-md text-sm font-medium transition-all {{ $period === 'year' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200' }}">
-                        Annee
-                    </button>
+            <!-- Période -->
+                <div class="mb-6">
+                    <div class="flex items-center gap-4 flex-wrap">
+                        <span class="text-sm text-gray-500 dark:text-gray-400">Période :</span>
+                        <div class="flex bg-gray-100 dark:bg-gray-700 rounded-lg p-1" x-data="{ active: @entangle('period') }">
+                            <button wire:click="setPeriod('week')" @click="active = 'week'"
+                                class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
+                                :class="active === 'week' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
+                                Semaine
+                            </button>
+                            <button wire:click="setPeriod('month')" @click="active = 'month'"
+                                class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
+                                :class="active === 'month' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
+                                Mois
+                            </button>
+                            <button wire:click="setPeriod('threemonths')" @click="active = 'threemonths'"
+                                class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
+                                :class="active === 'threemonths' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
+                                3 mois
+                            </button>
+                            <button wire:click="setPeriod('sixmonths')" @click="active = 'sixmonths'"
+                                class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
+                                :class="active === 'sixmonths' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
+                                6 mois
+                            </button>
+                            <button wire:click="setPeriod('year')" @click="active = 'year'"
+                                class="px-4 py-1.5 rounded-md text-sm font-medium transition-all"
+                                :class="active === 'year' ? 'bg-white dark:bg-gray-600 text-primary-600 dark:text-primary-400 shadow-sm' : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200'">
+                                Année
+                            </button>
+                        </div>
+                        <button wire:click="loadStats" wire:loading.attr="disabled"
+                            class="p-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ml-auto"
+                            title="Rafraîchir">
+                            <svg wire:loading.remove wire:target="loadStats" class="w-5 h-5" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            <svg wire:loading wire:target="loadStats" class="w-5 h-5 animate-spin text-primary-600"
+                                fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    @if($activeRangeLabel)
+                        <p class="mt-3 flex items-center gap-2 text-xs text-gray-400 dark:text-gray-500">
+                            <span>Période calculée : {{ $activeRangeLabel }}</span>
+                            <span wire:loading.delay.shortest
+                                class="inline-flex items-center gap-1 text-primary-600 dark:text-primary-400 font-medium">
+                                <svg class="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4">
+                                    </circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                                Mise à jour…
+                            </span>
+                        </p>
+                    @endif
                 </div>
-                <button wire:click="loadStats" wire:loading.attr="disabled"
-                    class="p-2 text-gray-500 dark:text-gray-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors ml-auto"
-                    title="Rafraichir">
-                    <svg wire:loading.remove wire:target="loadStats" class="w-5 h-5" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                    </svg>
-                    <svg wire:loading wire:target="loadStats" class="w-5 h-5 animate-spin text-primary-600" fill="none"
-                        viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                        </circle>
-                        <path class="opacity-75" fill="currentColor"
-                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                        </path>
-                    </svg>
-                </button>
-            </div>
         </div>
     </div>
 
@@ -138,9 +172,31 @@
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
             <!-- Mini Stats Cards -->
             <div class="lg:col-span-1 space-y-4">
+                @php
+                    // Répartition clients (actifs / inactifs) — segment gris si aucune donnée
+                    $clientsD = $stats['clients_donut'] ?? ['actifs' => 0, 'inactifs' => 0];
+                    $clientsDonutTotal = ($clientsD['actifs'] ?? 0) + ($clientsD['inactifs'] ?? 0);
+                    $clientsDonut = $clientsDonutTotal > 0
+                        ? ['labels' => ['Actifs', 'Inactifs'], 'values' => [(int) $clientsD['actifs'], (int) $clientsD['inactifs']], 'colors' => ['#10b981', '#ef4444']]
+                        : ['labels' => ['Aucune donnée'], 'values' => [1], 'colors' => ['#cbd5e1']];
+
+                    // Répartition factures (payées / en attente / en retard)
+                    $invoicesD = $stats['invoices_donut'] ?? ['payees' => 0, 'en_attente' => 0, 'en_retard' => 0];
+                    $invoicesDonutTotal = ($invoicesD['payees'] ?? 0) + ($invoicesD['en_attente'] ?? 0) + ($invoicesD['en_retard'] ?? 0);
+                    $invoicesDonut = $invoicesDonutTotal > 0
+                        ? ['labels' => ['Payées', 'En attente', 'En retard'], 'values' => [(int) $invoicesD['payees'], (int) $invoicesD['en_attente'], (int) $invoicesD['en_retard']], 'colors' => ['#10b981', '#f59e0b', '#ef4444']]
+                        : ['labels' => ['Aucune donnée'], 'values' => [1], 'colors' => ['#cbd5e1']];
+
+                    // Répartition devis (en cours / acceptés / refusés)
+                    $quotesDonutTotal = ($stats['quotes'] ?? 0) + ($stats['accepted_quotes'] ?? 0) + ($stats['refused_quotes'] ?? 0);
+                    $quotesDonut = $quotesDonutTotal > 0
+                        ? ['labels' => ['En cours', 'Acceptés', 'Refusés'], 'values' => [(int) ($stats['quotes'] ?? 0), (int) ($stats['accepted_quotes'] ?? 0), (int) ($stats['refused_quotes'] ?? 0)], 'colors' => ['#6366f1', '#10b981', '#ef4444']]
+                        : ['labels' => ['Aucune donnée'], 'values' => [1], 'colors' => ['#cbd5e1']];
+                @endphp
+
                 <!-- Clients Count -->
                 <div class="glass-card rounded-2xl p-5 hover:shadow-lg transition-shadow duration-300">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-gradient-to-br from-sky-400 to-sky-500 flex items-center justify-center shadow-lg">
@@ -155,12 +211,20 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Clients</p>
                             </div>
                         </div>
+                        <div class="relative w-20 h-20 shrink-0" title="Clients actifs / inactifs">
+                            <canvas
+                                data-chart="donut"
+                                data-labels='@json($clientsDonut['labels'])'
+                                data-values='@json($clientsDonut['values'])'
+                                data-colors='@json($clientsDonut['colors'])'>
+                            </canvas>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Invoices Count -->
                 <div class="glass-card rounded-2xl p-5 hover:shadow-lg transition-shadow duration-300">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-gradient-to-br from-green-400 to-green-500 flex items-center justify-center shadow-lg">
@@ -175,12 +239,20 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Factures</p>
                             </div>
                         </div>
+                        <div class="relative w-20 h-20 shrink-0" title="Factures payées / en attente / en retard">
+                            <canvas
+                                data-chart="donut"
+                                data-labels='@json($invoicesDonut['labels'])'
+                                data-values='@json($invoicesDonut['values'])'
+                                data-colors='@json($invoicesDonut['colors'])'>
+                            </canvas>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Quotes -->
                 <div class="glass-card rounded-2xl p-5 hover:shadow-lg transition-shadow duration-300">
-                    <div class="flex items-center justify-between">
+                    <div class="flex items-center justify-between gap-4">
                         <div class="flex items-center gap-4">
                             <div
                                 class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-400 to-indigo-500 flex items-center justify-center shadow-lg">
@@ -195,100 +267,64 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400">Devis en cours</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-lg font-semibold text-emerald-600 dark:text-emerald-400">
-                                {{ $stats['accepted_quotes'] ?? 0 }}</p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500">Acceptes</p>
+                        <div class="relative w-20 h-20 shrink-0" title="Devis en cours / acceptés / refusés">
+                            <canvas
+                                data-chart="donut"
+                                data-labels='@json($quotesDonut['labels'])'
+                                data-values='@json($quotesDonut['values'])'
+                                data-colors='@json($quotesDonut['colors'])'>
+                            </canvas>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Revenue Table -->
+            <!-- Graphique : Évolution du chiffre d'affaires -->
             <div class="lg:col-span-2">
-                <div class="glass-card rounded-2xl p-6 h-full">
-                    <div class="flex items-center justify-between mb-6">
+                <div class="glass-card rounded-2xl p-6 h-full flex flex-col">
+                    <div class="flex items-start justify-between gap-4 mb-6">
                         <div>
-                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Evolution du chiffre d'affaires
+                            <h3 class="text-lg font-bold text-gray-900 dark:text-white">Évolution du chiffre d'affaires
                             </h3>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Revenus mensuels des 6 derniers mois</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">{{ $stats['chart_subtitle'] ?? 'Revenus sur la période' }}</p>
+                        </div>
+                        <div class="text-right shrink-0">
+                            <p class="text-xs uppercase tracking-wider text-gray-400 dark:text-gray-500">Total période</p>
+                            <p class="text-xl font-bold text-emerald-600 dark:text-emerald-400">
+                                {{ number_format($stats['chart']->sum('value'), 0, ',', ' ') }} FCFA
+                            </p>
                         </div>
                     </div>
 
-                    @if(isset($stats['chart']) && count($stats['chart']) > 0)
-                        <div class="overflow-hidden rounded-xl border border-gray-100 dark:border-gray-700">
-                            <table class="min-w-full">
-                                <thead class="bg-gray-50 dark:bg-gray-700">
-                                    <tr>
-                                        <th
-                                            class="px-4 py-3 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Mois</th>
-                                        <th
-                                            class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Montant</th>
-                                        <th
-                                            class="px-4 py-3 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                            Evolution</th>
-                                    </tr>
-                                </thead>
-                                <tbody class="divide-y divide-gray-100 dark:divide-gray-700 bg-white dark:bg-gray-800">
-                                    @foreach($stats['chart'] as $item)
-                                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
-                                            <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">
-                                                {{ $item['month'] }}
-                                            </td>
-                                            <td
-                                                class="px-4 py-3 text-right text-sm font-semibold text-emerald-600 dark:text-emerald-400">
-                                                {{ number_format($item['total'], 0, ',', ' ') }} CFA
-                                            </td>
-                                            <td class="px-4 py-3 text-right">
-                                                @if($item['evolution'] !== null)
-                                                    <span
-                                                        class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium
-                                                                                            {{ $item['evolution'] >= 0 ? 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-700 dark:text-emerald-300' : 'bg-red-100 dark:bg-red-900/50 text-red-700 dark:text-red-300' }}">
-                                                        {{ $item['evolution'] >= 0 ? '+' : '' }}{{ $item['evolution'] }}%
-                                                    </span>
-                                                @else
-                                                    <span class="text-xs text-gray-400 dark:text-gray-500">-</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                    <div class="relative flex-1 w-full h-56 sm:h-64">
+                        <canvas
+                            data-chart="revenue"
+                            data-labels='@json($stats['chart']->pluck('label'))'
+                            data-values='@json($stats['chart']->pluck('value')->map(fn ($v) => (int) $v))'>
+                        </canvas>
 
-                        <!-- Summary -->
-                        <div class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                            <div class="flex items-center justify-between text-sm">
-                                <span class="text-gray-500 dark:text-gray-400">Total (6 mois)</span>
-                                <span class="font-bold text-gray-900 dark:text-white">
-{{ number_format($stats['chart']->sum('total'), 0, ',', ' ') }} CFA
-                                </span>
+                        @if($stats['chart']->sum('value') <= 0)
+                            <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                                <svg class="w-10 h-10 mb-2 text-gray-300 dark:text-gray-600" fill="none"
+                                    stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                                </svg>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Les revenus apparaîtront ici une fois
+                                    les factures payées
+                                </p>
                             </div>
-                        </div>
-                    @else
-                        <!-- Empty State -->
-                        <div class="flex flex-col items-center justify-center h-48 text-gray-500 dark:text-gray-400">
-                            <svg class="w-16 h-16 mb-4 text-gray-300 dark:text-gray-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-                            </svg>
-                            <p class="text-center">Aucune donnee de revenus disponible</p>
-                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">Les revenus apparaitront ici une fois
-                                les factures payees
-                            </p>
-                        </div>
-                    @endif
+                        @endif
+                    </div>
                 </div>
+            </div>
             </div>
         </div>
 
         <!-- Recent Documents Section -->
         <div>
             <div class="flex items-center justify-between mb-4">
-                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Documents recents</h3>
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">Documents récents</h3>
                 <a href="{{ route('documents.index') }}"
                     class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 transition-colors">
                     Voir tout
@@ -312,7 +348,7 @@
                                         Client</th>
                                     <th
                                         class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
-                                        Status</th>
+                                        Statut</th>
                                     <th
                                         class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Date</th>
@@ -394,7 +430,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">Aucun document</h3>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6">Commencez par creer votre premier document</p>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6">Commencez par créer votre premier document</p>
                     <div class="flex justify-center gap-3">
                         <a href="{{ route('documents.create', 'invoice') }}" class="btn-primary">
                             Nouveau devis

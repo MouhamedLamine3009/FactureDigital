@@ -145,7 +145,8 @@
 
                                     <!-- Actions -->
                                     <div class="mt-6 sm:flex sm:flex-row-reverse gap-3">
-                                        <button type="submit" wire:disabled="$sending"
+                                        <button type="button" wire:click.prevent="send" wire:disabled="$sending"
+                                            wire:loading.attr="disabled"
                                             class="btn-primary w-full sm:w-auto mb-3 sm:mb-0">
                                             @if($sending)
                                                 <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" fill="none"

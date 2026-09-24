@@ -6,6 +6,7 @@ use Livewire\Component;
 use Livewire\Attributes\Layout;
 use App\Models\Client;
 use App\Models\Company;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
 #[Layout('layouts.app')]
@@ -38,7 +39,7 @@ class ClientForm extends Component
             'name' => 'required|string|max:255',
             'contact_name' => 'nullable|string|max:255',
             'email' => [
-                'required',
+                'nullable',
                 'email',
                 'max:255',
                 Rule::unique('clients', 'email')
@@ -96,7 +97,7 @@ class ClientForm extends Component
 
     public function initializeCompany()
     {
-        $user = auth()->user();
+        $user = Auth::user();
 
         if (!$user) {
             $this->companyId = null;
@@ -148,11 +149,20 @@ class ClientForm extends Component
     {
         // Validate company exists
         if (!$this->companyId) {
-            session()->flash('error', 'Impossible de créer le client. Veuillez créer une entreprise d\'abord.');
+            session()->flash('error', 'Impossible de créer le client. companyId est vide (aucune entreprise trouvée pour l\'utilisateur).');
             return;
         }
 
-        $this->validate();
+        // Debug helpers (enabled in dev): show validation errors clearly
+        $this->normalizeOptionalFields();
+
+        try {
+            $this->validate();
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Force session message so user can see what failed even if Livewire UI doesn't show it
+            session()->flash('error', $e->getMessage());
+            throw $e;
+        }
 
         $data = [
             'company_id' => $this->companyId,
@@ -184,9 +194,27 @@ class ClientForm extends Component
         return redirect()->route('clients.index');
     }
 
+    private function normalizeOptionalFields(): void
+    {
+        foreach ([
+            'contact_name',
+            'email',
+            'phone',
+            'address',
+            'postal_code',
+            'city',
+            'country',
+            'ninea',
+            'vat_number',
+            'notes',
+            'payment_method',
+        ] as $field) {
+            $this->{$field} = blank($this->{$field}) ? null : $this->{$field};
+        }
+    }
+
     public function render()
     {
         return view('livewire.client-form');
     }
 }
-

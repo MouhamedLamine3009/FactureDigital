@@ -68,13 +68,25 @@ class DocumentForm extends Component
         ];
     }
 
-    public function mount($document = null, $type = 'invoice')
+    public function mount($documentOrType = null, $type = null)
     {
-        // If we are on the edit route, $document is the document ID/instance.
-        // If we are on the create route, $type is provided (quote/invoice).
-        $this->type = $type;
+        // Livewire page components map route params to mount() in order.
+        // - /documents/form/{type} passes only the document type
+        // - /documents/{document}/edit passes only the document instance/id
+        if ($type === null && in_array($documentOrType, ['invoice', 'quote'])) {
+            $this->type = $documentOrType;
+            $document = null;
+        } else {
+            $document = $documentOrType;
+            $this->type = $type ?? 'invoice';
+        }
 
-        $company = auth()->user()->currentCompany ?? auth()->user()->companies()->first();
+        $user = auth()->user();
+        if (!$user) {
+            abort(403);
+        }
+
+        $company = $user->currentCompany ?? $user->companies()->first();
 
         if (!$company) {
             $this->companyId = null;

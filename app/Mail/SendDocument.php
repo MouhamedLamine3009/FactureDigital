@@ -62,13 +62,30 @@ class SendDocument extends Mailable
      */
     public function envelope(): Envelope
     {
-        $fromEmail = $this->fromEmail ?? config('mail.from.address');
-        $fromName = $this->fromName ?? config('mail.from.name');
+        $defaultEmail = config('mail.from.address');
+        $defaultName = config('mail.from.name');
+
+        $fromEmail = $this->fromEmail && filter_var($this->fromEmail, FILTER_VALIDATE_EMAIL)
+            ? $this->fromEmail
+            : $defaultEmail;
+
+        $fromName = trim($this->fromName) ?: $defaultName;
+
+        $replyTo = null;
+
+        // On respecte désormais l'email de l'entreprise (si valide) comme From.
+        // On conserve toutefois un Reply-To quand l'email de l'entreprise diffère de l'email global.
+        if ($fromEmail !== $defaultEmail) {
+            $replyTo = [new Address($fromEmail, $fromName)];
+        }
 
         return new Envelope(
             from: new Address($fromEmail, $fromName),
             subject: $this->subject,
+            replyTo: $replyTo,
         );
+
+
     }
 
     /**

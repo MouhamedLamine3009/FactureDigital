@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 260 180" width="260" height="180" fill="none">
+  <defs>
+    <linearGradient id="f2p" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#38bdf8"/>
+      <stop offset="1" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="f2g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#34d399"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+  <circle cx="20" cy="20" r="55" fill="url(#f2p)" opacity="0.10"/>
+  <circle cx="235" cy="160" r="45" fill="url(#f2g)" opacity="0.08"/>
+
+  <rect x="50" y="18" width="160" height="146" rx="18" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" transform="rotate(3 130 91)"/>
+  <rect x="70" y="30" width="34" height="34" rx="9" fill="url(#f2p)" transform="rotate(3 87 47)"/>
+  <path d="M80 48 l6 6 l9 -9" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="112" y="34" width="84" height="11" rx="5.5" fill="#0ea5e9" opacity="0.5"/>
+  <rect x="112" y="51" width="58" height="9" rx="4.5" fill="#38bdf8" opacity="0.3"/>
+
+  <rect x="64" y="76" width="132" height="9" rx="4.5" fill="#e2e8f0"/>
+  <rect x="64" y="92" width="104" height="9" rx="4.5" fill="#e2e8f0"/>
+  <rect x="64" y="108" width="118" height="9" rx="4.5" fill="#e2e8f0"/>
+  <rect x="64" y="126" width="2" height="2" fill="none"/>
+  <rect x="64" y="132" width="132" height="2" rx="1" fill="#e2e8f0"/>
+  <rect x="64" y="142" width="70" height="14" rx="7" fill="url(#f2g)"/>
+  <text x="99" y="153" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="9" font-weight="700" fill="#ffffff">FACTURE</text>
+</svg>
