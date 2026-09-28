@@ -98,7 +98,7 @@
                                         <div class="flex items-center gap-4">
                                             <div
                                                 class="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-primary-600 flex items-center justify-center text-white font-bold text-lg">
-                                                {{ strtoupper(substr($selectedClient->name, 0, 2)) }}
+                                                {{ initials($selectedClient->name) }}
                                             </div>
                                             <div>
                                                 <p class="font-semibold text-gray-900 dark:text-white">{{ $selectedClient->name }}

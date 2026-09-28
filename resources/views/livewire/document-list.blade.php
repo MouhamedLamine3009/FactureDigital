@@ -168,21 +168,39 @@
                         <div
                             class="flex items-center justify-between p-5 hover:bg-gray-50/80 dark:hover:bg-gray-700/30 transition-all duration-200 group">
                             <a href="{{ route('documents.show', $document) }}" class="flex items-center gap-5 flex-1">
-                                <!-- Document Type Icon -->
+                                <!-- Document Type Icon : les valeurs réelles sont 'quote' et 'invoice' -->
+                                @php
+                                    $isQuote = $document->type === 'quote';
+                                @endphp
                                 <div
                                     class="w-14 h-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 shadow-md
-                                            {{ $document->type === 'quote' ? 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 text-blue-600 dark:text-blue-400' : 'bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/50 dark:to-green-800/50 text-green-600 dark:text-green-400' }}">
-                                    @if($document->type === 'quote')
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                    @else
-                                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
-                                        </svg>
-                                    @endif
+                                            {{ $isQuote
+                                                ? 'bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/50 dark:to-blue-800/50 text-blue-700 dark:text-blue-400'
+                                                : 'bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/50 dark:to-green-800/50 text-green-700 dark:text-green-400' }}">
+                                    @switch($document->type)
+                                        @case('quote')
+                                            {{-- Devis : calculatrice (estimation / proposition chiffrée) --}}
+                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.7"
+                                                viewBox="0 0 24 24" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M7.5 3h9A2.5 2.5 0 0119 5.5v13a2.5 2.5 0 01-2.5 2.5h-9A2.5 2.5 0 015 18.5v-13A2.5 2.5 0 017.5 3z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 7.75h7.5" />
+                                                <path stroke-linecap="round" stroke-width="2.6"
+                                                    d="M9 12.75h.01M12 12.75h.01M15 12.75h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01" />
+                                            </svg>
+                                            @break
+
+                                        @default
+                                            {{-- Facture : reçu avec symbole monétaire --}}
+                                            <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="1.7"
+                                                viewBox="0 0 24 24" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M6.75 3.75h10.5a1.5 1.5 0 011.5 1.5v15l-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5v-15a1.5 1.5 0 011.5-1.5z" />
+                                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 8.25v7.5" />
+                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                    d="M13.9 10.4c-.4-.42-1.05-.66-1.9-.66-1.05 0-1.85.5-1.85 1.28 0 .72.6 1.05 1.95 1.3 1.4.26 2.15.78 2.15 1.75 0 1.06-.95 1.73-2.35 1.73-.92 0-1.68-.26-2.1-.74" />
+                                            </svg>
+                                    @endswitch
                                 </div>
 
                                 <!-- Document Info -->
@@ -194,8 +212,8 @@
                                         </p>
                                         <span
                                             class="px-2.5 py-1 rounded-full text-xs font-semibold 
-                                                    {{ $document->type === 'quote' ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300' }}">
-                                            {{ $document->type === 'quote' ? 'Devis' : 'Facture' }}
+                                                    {{ $isQuote ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300' : 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300' }}">
+                                            {{ $isQuote ? 'Devis' : 'Facture' }}
                                         </span>
                                         <div>
                                             {!! $document->status_badge !!}

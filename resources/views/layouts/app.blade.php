@@ -41,7 +41,7 @@
             <div class="absolute -bottom-40 -left-40 w-80 h-80 bg-accent-200/20 dark:bg-accent-900/20 rounded-full blur-3xl"></div>
         </div>
 
-        <div class="relative">
+        <div class="relative min-h-screen flex flex-col">
             @include('navigation-menu')
 
             <!-- Page Heading -->
@@ -176,7 +176,21 @@
                 </div>
             @endif
 
-            {{ $slot }}
+            <div class="flex-1">
+                {{ $slot }}
+            </div>
+
+            <!-- Footer -->
+            <footer class="border-t border-gray-100 dark:border-gray-700/60 bg-white/40 dark:bg-gray-900/30 backdrop-blur-sm">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-2">
+                    <p class="text-sm text-gray-400 dark:text-gray-500">
+                        &copy; {{ date('Y') }} {{ config('app.name', 'DigiFact') }}. Tous droits réservés.
+                    </p>
+                    <p class="text-xs text-gray-400 dark:text-gray-500">
+                        La facturation simple, adaptée aux entreprises d'Afrique de l'Ouest.
+                    </p>
+                </div>
+            </footer>
 
         </div>
     </div>

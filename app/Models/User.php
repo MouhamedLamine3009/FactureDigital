@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\Initials;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 use Laravel\Jetstream\HasProfilePhoto;
@@ -46,6 +47,20 @@ class User extends Authenticatable
     public function companies()
     {
         return $this->hasMany(Company::class);
+    }
+
+    /**
+     * Avatar par défaut : initiales issues du prénom et du nom (ex. "MS").
+     */
+    protected function defaultProfilePhotoUrl()
+    {
+        $name = trim(Initials::make($this->name));
+
+        if ($name === '') {
+            $name = '?';
+        }
+
+        return 'https://ui-avatars.com/api/?name='.urlencode($name).'&bold=true&color=7F9CF5&background=EBF4FF';
     }
 
     /**

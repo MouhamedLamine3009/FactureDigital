@@ -39,9 +39,10 @@ class DocumentWhatsapp extends Component
         $this->showModal = true;
         $this->reset(['sending', 'sent', 'error']);
 
-        if (!$this->toPhone) {
-            $this->toPhone = $this->document->client?->phone ?? '';
-        }
+        $this->toPhone = $this->document->client?->phone ?? '';
+
+        // Pré-remplissage avec le message de l'action rapide (modifiable avant envoi)
+        $this->body = app(WhatsAppLinkService::class)->buildMessage($this->document);
     }
 
     public function closeModal(): void
@@ -127,6 +128,12 @@ class DocumentWhatsapp extends Component
     protected function buildFullMessage(): string
     {
         $pdfLink = route('documents.view-pdf', $this->document);
+
+        // Le message pré-rempli contient déjà le lien : ne pas l'ajouter une seconde fois
+        if (str_contains($this->body, $pdfLink)) {
+            return $this->body;
+        }
+
         return $this->body . "\n\n" . $pdfLink;
     }
 

@@ -83,7 +83,7 @@
         </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         <!-- Main Stats Grid - Financial Metrics -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <!-- Revenue Card -->
@@ -322,8 +322,8 @@
         </div>
 
         <!-- Recent Documents Section -->
-        <div>
-            <div class="flex items-center justify-between mb-4">
+        <div class="mb-8">
+            <div class="flex items-center justify-between mb-5 pt-1">
                 <h3 class="text-lg font-bold text-gray-900 dark:text-white">Documents récents</h3>
                 <a href="{{ route('documents.index') }}"
                     class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 flex items-center gap-1 transition-colors">
@@ -335,77 +335,97 @@
             </div>
 
             @if($recentDocuments->count() > 0)
-                <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="glass-card rounded-2xl overflow-hidden py-6">
                     <div class="overflow-x-auto">
                         <table class="min-w-full">
                             <thead>
                                 <tr class="bg-gray-50/50 dark:bg-gray-700/50">
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        class="px-8 py-5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Document</th>
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        class="px-8 py-5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Client</th>
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        class="px-8 py-5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Statut</th>
                                     <th
-                                        class="px-6 py-4 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        class="px-8 py-5 text-left text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Date</th>
                                     <th
-                                        class="px-6 py-4 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                        class="px-8 py-5 text-right text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                         Montant</th>
-                                    <th class="px-6 py-4"></th>
+                                    <th class="px-8 py-5"></th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
+                            <tbody class="divide-y divide-gray-100 dark:divide-gray-700/60">
                                 @foreach($recentDocuments as $doc)
                                     <tr
-                                        class="hover:bg-gray-50/50 dark:hover:bg-gray-700/50 transition-colors duration-150 group">
-                                        <td class="px-6 py-4">
+                                        class="relative hover:bg-gray-50 dark:hover:bg-gray-700/30 transition-colors duration-150 group cursor-pointer">
+                                        <td class="px-8 py-5 whitespace-nowrap">
+                                            <a href="{{ route('documents.show', $doc) }}"
+                                                class="absolute inset-0" aria-label="Voir {{ $doc->number }}"></a>
                                             <div class="flex items-center gap-3">
+                                                @php
+                                                    $isQuote = $doc->type === 'quote';
+                                                @endphp
                                                 <div
-                                                    class="w-10 h-10 rounded-lg flex items-center justify-center 
-                                                                            {{ $doc->type === 'quote' ? 'bg-indigo-100 dark:bg-indigo-900/50 text-indigo-600 dark:text-indigo-400' : 'bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 dark:text-emerald-400' }}">
-                                                    @if($doc->type === 'quote')
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                                        </svg>
-                                                    @else
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linecap="round" stroke-width="2"
-                                                                d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2zM10 8.5a.5.5 0 11-1 0 .5.5 0 011 0zm5 5a.5.5 0 11-1 0 .5.5 0 011 0z" />
-                                                        </svg>
-                                                    @endif
+                                                    class="w-10 h-10 rounded-lg flex items-center justify-center
+                                                            {{ $isQuote ? 'bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-400' : 'bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-400' }}">
+                                                    @switch($doc->type)
+                                                        @case('quote')
+                                                            {{-- Devis : calculatrice (estimation / proposition chiffrée) --}}
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7"
+                                                                viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M7.5 3h9A2.5 2.5 0 0119 5.5v13a2.5 2.5 0 01-2.5 2.5h-9A2.5 2.5 0 015 18.5v-13A2.5 2.5 0 017.5 3z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M8.25 7.75h7.5" />
+                                                                <path stroke-linecap="round" stroke-width="2.6"
+                                                                    d="M9 12.75h.01M12 12.75h.01M15 12.75h.01M9 16.5h.01M12 16.5h.01M15 16.5h.01" />
+                                                            </svg>
+                                                            @break
+
+                                                        @default
+                                                            {{-- Facture : reçu avec symbole monétaire --}}
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7"
+                                                                viewBox="0 0 24 24" aria-hidden="true">
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M6.75 3.75h10.5a1.5 1.5 0 011.5 1.5v15l-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5-2.25-1.5-2.25 1.5v-15a1.5 1.5 0 011.5-1.5z" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M12 8.25v7.5" />
+                                                                <path stroke-linecap="round" stroke-linejoin="round"
+                                                                    d="M13.9 10.4c-.4-.42-1.05-.66-1.9-.66-1.05 0-1.85.5-1.85 1.28 0 .72.6 1.05 1.95 1.3 1.4.26 2.15.78 2.15 1.75 0 1.06-.95 1.73-2.35 1.73-.92 0-1.68-.26-2.1-.74" />
+                                                            </svg>
+                                                    @endswitch
                                                 </div>
                                                 <div>
                                                     <p class="font-semibold text-gray-900 dark:text-white">{{ $doc->number }}
                                                     </p>
                                                     <p class="text-xs text-gray-400 dark:text-gray-500">
-                                                        {{ $doc->type === 'quote' ? 'Devis' : 'Facture' }}
+                                                        {{ $isQuote ? 'Devis' : 'Facture' }}
                                                     </p>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-8 py-5 whitespace-nowrap">
                                             <p class="text-sm text-gray-900 dark:text-white">{{ $doc->client->name ?? 'N/A' }}
                                             </p>
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-8 py-5 whitespace-nowrap">
                                             {!! $doc->status_badge !!}
                                         </td>
-                                        <td class="px-6 py-4">
+                                        <td class="px-8 py-5 whitespace-nowrap">
                                             <p class="text-sm text-gray-500 dark:text-gray-400">
                                                 {{ $doc->issue_date->format('d/m/Y') }}</p>
                                         </td>
-                                        <td class="px-6 py-4 text-right">
+                                        <td class="px-8 py-5 text-right whitespace-nowrap">
                                             <p class="font-semibold text-gray-900 dark:text-white">{{ $doc->formatted_total }}
                                             </p>
                                         </td>
-                                        <td class="px-6 py-4 text-right">
+                                        <td class="px-8 py-5 text-right">
                                             <a href="{{ route('documents.show', $doc) }}"
-                                                class="inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700 transition-all">
+                                                class="relative z-10 inline-flex items-center justify-center w-8 h-8 rounded-lg text-gray-400 dark:text-gray-500 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-primary-50 dark:hover:bg-gray-700 transition-all">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                         d="M9 5l7 7-7 7" />

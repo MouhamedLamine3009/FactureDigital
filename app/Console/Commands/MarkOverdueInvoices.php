@@ -19,14 +19,14 @@ class MarkOverdueInvoices extends Command
      *
      * @var string
      */
-    protected $description = 'Mark invoices as overdue if past due date and not paid';
+    protected $description = 'Marquer comme en retard les factures échues et non payées';
 
     /**
      * Execute the console command.
      */
     public function handle()
     {
-        $this->info('Checking for overdue invoices...');
+        $this->info('Recherche des factures en retard...');
 
         // Find invoices that are past due date and not already marked as paid, cancelled, or overdue
         $overdueInvoices = Document::where('type', 'invoice')
@@ -41,7 +41,7 @@ class MarkOverdueInvoices extends Command
                 'status' => 'overdue',
             ]);
             $count++;
-            $this->line("Marked invoice {$invoice->number} as overdue");
+            $this->line("Facture {$invoice->number} marquée comme en retard");
         }
 
         // Also mark invoices that were previously marked as overdue but are now paid
@@ -55,10 +55,10 @@ class MarkOverdueInvoices extends Command
                 'status' => 'paid',
                 'paid_at' => now(),
             ]);
-            $this->line("Updated invoice {$invoice->number} to paid status");
+            $this->line("Facture {$invoice->number} passée au statut payé");
         }
 
-        $this->info("Completed. Marked {$count} invoices as overdue.");
+        $this->info("Terminé. {$count} facture(s) marquée(s) comme en retard.");
 
         return Command::SUCCESS;
     }

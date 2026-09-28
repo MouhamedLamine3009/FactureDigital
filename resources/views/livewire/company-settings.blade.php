@@ -6,6 +6,17 @@
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <form wire:submit.prevent="save" enctype="multipart/form-data">
+                @if ($errors->any())
+                    <div class="mb-6 rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-700 dark:bg-red-950/40">
+                        <p class="text-sm font-semibold text-red-700 dark:text-red-400">Le formulaire contient des erreurs :</p>
+                        <ul class="mt-2 list-disc space-y-1 pl-5 text-sm text-red-700 dark:text-red-400">
+                            @foreach ($errors->all() as $error)
+                                <li>{{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <!-- Colonne de gauche -->
                     <div class="space-y-6">

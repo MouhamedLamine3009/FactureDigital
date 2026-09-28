@@ -1,7 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Storage;
 use App\Livewire\Dashboard;
 use App\Livewire\DocumentList;
 use App\Livewire\DocumentForm;
@@ -63,19 +62,15 @@ Route::middleware(['auth'])->group(function () {
         // PDF Generation - view inline
         Route::get('/{document}/view-pdf', function ($document) {
             $doc = \App\Models\Document::with(['company', 'client', 'items'])->findOrFail($document);
-
-            // Check if PDF already exists
-            if ($doc->pdf_path && Storage::disk('public')->exists($doc->pdf_path)) {
-                $pdfContent = Storage::disk('public')->get($doc->pdf_path);
-            } else {
-                $action = new GenerateDocumentPDF();
-                $pdf = $action->generate($doc);
-                $pdfContent = $pdf->output();
-            }
+            $action = new GenerateDocumentPDF();
+            $pdf = $action->generate($doc);
+            $pdfContent = $pdf->output();
 
             return response($pdfContent, 200, [
                 'Content-Type' => 'application/pdf',
                 'Content-Disposition' => 'inline; filename="' . $doc->number . '.pdf"',
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0',
+                'Pragma' => 'no-cache',
             ]);
         })->name('view-pdf');
     });
@@ -97,20 +92,19 @@ Route::get('/', function () {
     return view('landing');
 });
 
-// Legal pages
-Route::view('/terms', 'terms')->name('terms');
-Route::view('/policy', 'policy')->name('policy');
+// Pages légales : /terms et /policy sont gérées par Jetstream (contenu français)
+// (voir la section 'terms' / 'policy' de config/jetstream.php)
+Route::redirect('/terms', '/terms-of-service');
+Route::redirect('/policy', '/privacy-policy');
 
-// Socialite authentication
+// Socialite authentication (Google OAuth)
 Route::get('/auth/redirect/{provider}', [App\Http\Controllers\SocialiteController::class, 'redirect'])
     ->name('auth.redirect')
-    ->where('provider', 'google|microsoft');
+    ->where('provider', 'google');
 
 Route::get('/auth/callback/{provider}', [App\Http\Controllers\SocialiteController::class, 'callback'])
     ->name('auth.callback')
-    ->where('provider', 'google|microsoft');
-
-
+    ->where('provider', 'google');
 
 
 

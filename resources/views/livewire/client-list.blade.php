@@ -242,7 +242,7 @@
                             <a href="{{ route('clients.edit', $client) }}" class="flex items-center gap-5 flex-1">
                                 <!-- Avatar -->
                                 <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-primary-100 dark:from-primary-800 to-primary-200 dark:to-primary-700 flex items-center justify-center text-primary-600 dark:text-primary-300 font-bold text-lg transition-transform group-hover:scale-110">
-                                    {{ strtoupper(substr($client->name, 0, 2)) }}
+                                    {{ initials($client->name) }}
                                 </div>
                                 
                                 <!-- Client Info -->

@@ -350,8 +350,8 @@
                     © {{ date('Y') }} {{ config('app.name', 'DigiFact') }}. Tous droits réservés.
                 </p>
                 <div class="flex gap-5 text-sm">
-                    <a href="{{ route('terms') }}" class="text-slate-600 transition hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-300">Conditions</a>
-                    <a href="{{ route('policy') }}" class="text-slate-600 transition hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-300">Confidentialité</a>
+                    <a href="{{ route('terms.show') }}" class="text-slate-600 transition hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-300">Conditions</a>
+                    <a href="{{ route('policy.show') }}" class="text-slate-600 transition hover:text-primary-600 dark:text-slate-400 dark:hover:text-primary-300">Confidentialité</a>
                 </div>
             </div>
         </footer>

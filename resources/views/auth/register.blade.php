@@ -70,6 +70,27 @@
                 {{-- Validation errors --}}
                 <x-validation-errors class="mb-4" />
 
+                {{-- Inscription Google --}}
+                <a href="{{ route('auth.redirect', 'google') }}" class="flex w-full items-center justify-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-700 shadow-sm transition hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700">
+                    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M23.5 12.27c0-.85-.08-1.66-.22-2.45H12v4.64h6.45a5.52 5.52 0 0 1-2.4 3.62v3h3.88c2.27-2.09 3.57-5.17 3.57-8.81Z" fill="#4285F4"/>
+                        <path d="M12 24c3.24 0 5.96-1.07 7.94-2.91l-3.88-3c-1.08.72-2.45 1.15-4.06 1.15-3.12 0-5.76-2.11-6.7-4.94H1.29v3.1A12 12 0 0 0 12 24Z" fill="#34A853"/>
+                        <path d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.29a12 12 0 0 0 0 10.8l4.01-3.1Z" fill="#FBBC05"/>
+                        <path d="M12 4.75c1.76 0 3.35.6 4.6 1.8l3.44-3.44C17.95 1.19 15.24 0 12 0A12 12 0 0 0 1.29 6.6l4.01 3.1C6.24 6.86 8.88 4.75 12 4.75Z" fill="#EA4335"/>
+                    </svg>
+                    {{ __('Continuer avec Google') }}
+                </a>
+
+                {{-- Séparateur --}}
+                <div class="relative my-6">
+                    <div class="absolute inset-0 flex items-center">
+                        <div class="w-full border-t border-slate-200 dark:border-slate-700"></div>
+                    </div>
+                    <div class="relative flex justify-center">
+                        <span class="bg-white px-3 text-xs font-medium text-slate-400 dark:bg-slate-900 dark:text-slate-500">{{ __('ou avec votre email') }}</span>
+                    </div>
+                </div>
+
                 <form method="POST" action="{{ route('register') }}" class="space-y-5">
                     @csrf
 
@@ -88,7 +109,7 @@
 
                     {{-- Email --}}
                     <div>
-                        <x-label for="email" value="{{ __('Email') }}" class="text-sm font-medium text-slate-700 dark:text-slate-300" />
+                        <x-label for="email" value="{{ __('E-mail') }}" class="text-sm font-medium text-slate-700 dark:text-slate-300" />
                         <div class="relative mt-1.5">
                             <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.8" stroke="currentColor" class="h-5 w-5 text-slate-400">
